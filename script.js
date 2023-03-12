@@ -29,3 +29,37 @@ document.addEventListener('keydown', function (e) {
     closeModal();
   }
 });
+
+
+
+
+const section1 = document.querySelector("#section--1")
+const section2 = document.querySelector("#section--2")
+const section3 = document.querySelector("#section--3")
+
+
+const myScroll = function(area){
+  const scords = area.getBoundingClientRect()
+  window.scrollTo({
+        left:scords.left,
+        top:scords.top,
+        behavior:"smooth"
+  
+      })
+
+}
+document.querySelector(".link-1").addEventListener("click",function(){
+myScroll(section1)})
+document.querySelector(".link-2").addEventListener("click",function(){
+myScroll(section2)})
+document.querySelector(".link-3").addEventListener("click",function(){
+myScroll(section3)})
+document.querySelector(".btn--scroll-to").addEventListener("click",function(){
+  const scords = section1.getBoundingClientRect()
+  window.scrollTo({
+        left:scords.left,
+        top: scords.top + window.pageYOffset,
+        behavior:"smooth"
+  
+      })
+})
