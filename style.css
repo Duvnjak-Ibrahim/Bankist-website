@@ -111,6 +111,7 @@ img {
 
 .lazy-img {
   filter: blur(20px);
+
 }
 
 /* NAVIGATION */
@@ -380,7 +381,7 @@ h4 {
   position: relative;
 
   /* IN THE END */
-  overflow: hidden;
+  overflow:hidden;
 }
 
 .slide {

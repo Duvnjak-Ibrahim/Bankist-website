@@ -30,36 +30,153 @@ document.addEventListener('keydown', function (e) {
   }
 });
 
+//////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////
 
+    const navAncors = document.querySelectorAll(".nav__link")
+    navAncors.forEach( el => el.addEventListener("click",function(e){
+      e.preventDefault()
+      const id = this.getAttribute("href")
+      
+      // const scords = document.querySelector(`${id}`).getBoundingClientRect()
+      //   window.scrollTo({
+      //         left:scords.left,
+      //         top: scords.top + window.pageYOffset,
+      //         behavior:"smooth"
+        
+      //       })
+      document.querySelector(`${id}`).scrollIntoView({behavior:"smooth"})
+      
+    }))
 
+//////////////////////////////////////////////////////////
+// building trasnpaernt navbar
 
-const section1 = document.querySelector("#section--1")
-const section2 = document.querySelector("#section--2")
-const section3 = document.querySelector("#section--3")
+const nav = document.querySelector(".nav")
 
+const opacityFunction = function(e,opacity){
+  if(e.target.classList.contains("nav__link")){
+    const link = e.target
+    // const siblings = nav.querySelectorAll(".nav__link")
+    const siblings = link.closest(".nav").querySelectorAll(".nav__link")
+    const image = link.closest(".nav").querySelector("img")
 
-const myScroll = function(area){
-  const scords = area.getBoundingClientRect()
-  window.scrollTo({
-        left:scords.left,
-        top:scords.top,
-        behavior:"smooth"
-  
-      })
-
+    siblings.forEach(el => {
+      if(el !== link) el.style.opacity=opacity
+    })
+      
+    image.style.opacity =opacity
+  }
 }
-document.querySelector(".link-1").addEventListener("click",function(){
-myScroll(section1)})
-document.querySelector(".link-2").addEventListener("click",function(){
-myScroll(section2)})
-document.querySelector(".link-3").addEventListener("click",function(){
-myScroll(section3)})
-document.querySelector(".btn--scroll-to").addEventListener("click",function(){
-  const scords = section1.getBoundingClientRect()
-  window.scrollTo({
-        left:scords.left,
-        top: scords.top + window.pageYOffset,
-        behavior:"smooth"
+nav.addEventListener("mouseover",function(e){
+  opacityFunction(e,0.5)
   
-      })
+  
+
+})
+nav.addEventListener("mouseout",function(e){
+  opacityFunction(e,1)
+})
+/////////////////////////////////////////////
+// tabbed component
+const tab = document.querySelector(".operations__tab-container")
+
+tab.addEventListener("click",function(e){
+
+  if(e.target.classList.contains("btn")){
+    const btn = e.target
+    const btnNum = btn.dataset.tab
+    const contents = document.querySelectorAll(".operations__content")
+    console.log(btnNum);
+    btn.closest(".operations__tab-container").querySelectorAll(".btn")
+    .forEach(el => el.classList.remove("operations__tab--active"))
+    
+    btn.classList.add("operations__tab--active")
+    
+    contents.forEach(content => content.classList.remove("operations__content--active"))
+    document.querySelector(`.operations__content--${btnNum}`).classList.add("operations__content--active")
+   
+  }
+})
+/////////////////////////////////////////////////////////////
+// sticky navbar
+const header = document.querySelector("header")
+const obsFun = function(entries,observer){
+  // if(window.scrollY>scords.top) nav.classList.add("sticky")
+  // else nav.classList.remove("sticky")
+  //  nav.classList.add("sticky")
+  const entry = entries[0]
+  // console.log(entry);
+  if(!entry.isIntersecting) nav.classList.add("sticky")
+  else nav.classList.remove("sticky")
+    
+}
+const obsObj ={
+  root:null,
+  treshold : 0,
+  rootMargin : "-50px",
+}
+const observer = new IntersectionObserver(obsFun,obsObj)
+observer.observe(header)
+
+
+///////////////////////////////////
+// spawning content function
+
+// const sections = document.querySelectorAll("section")
+// sections.forEach(sec => sec.classList.add("section--hidden"))
+
+// const obsObj2Fun = function(entries,observer){
+//   const entry1 =  entries[0]
+//   console.log(entry1);
+//   if(!entry1.isIntersecting) return;
+//    entry1.target.classList.remove("section--hidden")
+//    observer.unobserve(entry1.target)
+//   }
+
+// const obsObj2 = {
+//   root:null,
+//   treshold:0.15,
+//   // rootMargin: "200px"
+// }
+
+
+// const observerSec = new IntersectionObserver(obsObj2Fun,obsObj2)
+// sections.forEach(sec => observerSec.observe(sec))
+
+
+////////////////////////////////////////
+// lazy images loading
+const imgsLazy = document.querySelectorAll(".features__img")
+
+const obsLazyFun = function(entries,observer){
+  const [entry] = entries
+  const realPic = entry.target.dataset.src
+  entry.target.src =`${realPic}`
+  entry.target.classList.remove("lazy-img")
+  observer.unobserve(entry.target)
+  console.log(realPic);
+}
+const obsLazy = {
+  root: null,
+  treshold: 0,
+  rootMargin: "600px"
+}
+const observerLazy = new IntersectionObserver(obsLazyFun,obsLazy)
+
+imgsLazy.forEach( img => observerLazy.observe(img))
+
+//////////////////////////////////////////////
+// slide sliding function
+const slider = document.querySelector(".slider")
+const slides = document.querySelectorAll(".slide")
+const btnRight = document.querySelector("slider__btn--right")
+slider.style.overflow ="visible"
+// btnRight.addEventListener("click",function(){
+
+ 
+// })
+slides.forEach(function(slide,i){
+  slide.style.transform =`translateX(${(100*i)-100}%)`
 })
