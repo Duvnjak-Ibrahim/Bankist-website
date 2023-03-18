@@ -156,12 +156,12 @@ const obsLazyFun = function(entries,observer){
   entry.target.src =`${realPic}`
   entry.target.classList.remove("lazy-img")
   observer.unobserve(entry.target)
-  console.log(realPic);
+  
 }
 const obsLazy = {
   root: null,
   treshold: 0,
-  rootMargin: "600px"
+  // rootMargin: "600px"
 }
 const observerLazy = new IntersectionObserver(obsLazyFun,obsLazy)
 
@@ -171,12 +171,76 @@ imgsLazy.forEach( img => observerLazy.observe(img))
 // slide sliding function
 const slider = document.querySelector(".slider")
 const slides = document.querySelectorAll(".slide")
-const btnRight = document.querySelector("slider__btn--right")
-slider.style.overflow ="visible"
-// btnRight.addEventListener("click",function(){
+const btnRight = document.querySelector(".slider__btn--right")
+const btnLeft = document.querySelector(".slider__btn--left")
 
- 
-// })
-slides.forEach(function(slide,i){
-  slide.style.transform =`translateX(${(100*i)-100}%)`
+let curSlide = 0
+slides.forEach((slide,i) =>{
+  slide.style.transform =`translateX( ${100*i}%)`
 })
+const goToSlide = function(slide){
+
+  slides.forEach(function(s,i){
+    s.style.transform =`translateX(${100*(i-slide)}%)`
+  })
+}
+
+goToSlide(curSlide)
+
+const dotLogic = function(slide){
+  const dots = document.querySelectorAll(".dots__dot")
+  dots.forEach(function(dot){
+   const dotTarget = dot.dataset.slide
+   dot.classList.remove("black")
+   if(Number(dotTarget) === slide){
+     console.log(dotTarget);
+    dot.classList.add("black")
+   }
+  })
+}
+
+
+const prevSlide =function(){
+  if(curSlide=== 0){
+    curSlide=slides.length-1
+  }else curSlide--;
+ dotLogic(curSlide)
+ goToSlide(curSlide)
+}
+const nextSlide =function(){
+  if(curSlide===slides.length-1){
+    curSlide=0
+  }else curSlide++;
+  dotLogic(curSlide)
+ goToSlide(curSlide)
+}
+
+btnLeft.addEventListener("click",prevSlide)
+btnRight.addEventListener("click",nextSlide)
+
+document.addEventListener("keydown",function(e){
+  if(e.key === "ArrowRight"){
+    nextSlide()
+  }else if (e.key === "ArrowLeft"){
+    prevSlide()
+  }
+
+})
+document.addEventListener("click",function(e){
+  const target = e.target
+  const dotTarget = target.dataset.slide
+  dotLogic(Number(dotTarget))
+  goToSlide(Number(dotTarget))
+})
+/////////////////////////////////////////
+// adding dots
+const dotContainer = document.querySelector(".dots")
+const addDots = function(){
+  slides.forEach((s,i) => {
+    dotContainer.insertAdjacentHTML(
+    "beforeend",
+    `<button class="dots__dot" data-slide="${i}"></button>`)
+})
+}
+addDots()
+dotLogic(0)
