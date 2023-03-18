@@ -193,7 +193,7 @@ const dotLogic = function(slide){
    const dotTarget = dot.dataset.slide
    dot.classList.remove("black")
    if(Number(dotTarget) === slide){
-     console.log(dotTarget);
+     
     dot.classList.add("black")
    }
   })
@@ -226,12 +226,15 @@ document.addEventListener("keydown",function(e){
   }
 
 })
-document.addEventListener("click",function(e){
+const dots = document.querySelectorAll(".dots")
+dots.forEach(dot => dot.addEventListener("click",function(e){
   const target = e.target
-  const dotTarget = target.dataset.slide
-  dotLogic(Number(dotTarget))
-  goToSlide(Number(dotTarget))
+  const slide = target.dataset.slide
+  dotLogic(Number(slide))
+  goToSlide(Number(slide))
+  console.log(target.dataset.slide);
 })
+)
 /////////////////////////////////////////
 // adding dots
 const dotContainer = document.querySelector(".dots")
@@ -240,7 +243,7 @@ const addDots = function(){
     dotContainer.insertAdjacentHTML(
     "beforeend",
     `<button class="dots__dot" data-slide="${i}"></button>`)
+    dotLogic(0)
 })
 }
 addDots()
-dotLogic(0)
